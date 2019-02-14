@@ -32,10 +32,13 @@ php artisan make:migration create_messages_table     --create=messages
 # Run the migration
 php artisan migrate
 
-# Create modul
+# Create model
 php artisan make:model Book
 php artisan make:model Publisher
 php artisan make:model Author
+
+php artisan make:model Group
+php artisan make:model Message
 
 # Create controllers
 php artisan make:controller AuthorController
