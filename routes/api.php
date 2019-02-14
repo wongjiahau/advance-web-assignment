@@ -21,6 +21,9 @@ Route::resources([
     '/authors'      => 'AuthorController',
     '/publishers'   => 'PublisherController',
     '/books'        => 'BookController',
+    '/users'        => 'UserController',
+    '/groups'       => 'GroupController',
+    '/messages'     => 'MessageController'
 ]);
 
 Route::resource('/authors', 'AuthorController', ['except' => [

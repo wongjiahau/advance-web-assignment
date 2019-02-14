@@ -2,67 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
-use App\Book;
-use App\Http\Resources\BookResource;
-use App\Http\Resources\BookCollection;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
 
-class BookController extends Controller
+class UserController extends Controller
 {
     public function index()
     {
-        return new BookCollection(BookResource::collection(Book::all()));
+        return new UserCollection(UserResource::collection(User::all()));
     }
 
     public function show($id)
     {
-        $book = Book::find($id);
-        if(!$book) {
+        $user = User::find($id);
+        if(!$user) {
             return response()->json([
                 'error' => 404,
                 'message' => 'Not found'
             ], 404);
         } else {
-            return new BookResource($book);
+            return new UserResource($user);
         }
     }
 
     public function store(Request $request) 
     {
-        $book = Book::create($request->all());
-        $book->authors()->sync($request->authors);
+        $user = User::create($request->all());
         return response()->json([
-            'id'         => $book->id,
-            'created_at' => $book->created_at
+            'id'         => $user->id,
+            'created_at' => $user->created_at
         ]);
     }
 
     public function update(Request $request, $id)
     {
-        $book = Book::find($id);
-        if(!$book) {
+        $user = User::find($id);
+        if(!$user) {
             return response()->json([
                 'error'   => 404,
                 'message' => 'Not found'
             ], 404);
         } else {
-            $book->update($request->all());
+            $user->update($request->all());
             return response()->json(null, 204);
         }
     }
 
     public function destroy($id)
     {
-        $book = Book::find($id);
-        if(!$book) {
+        $user = User::find($id);
+        if(!$user) {
             return response()->json([
                 'error'   => 404,
                 'message' => 'Not found'
             ], 404);
         } else {
-            $book->delete();
+            $user->delete();
             return response()->json(null, 204);
         }
     }
-    //
 }

@@ -26,7 +26,7 @@ php artisan make:migration create_publishers_table   --create=publishers
 php artisan make:migration create_authors_table     --create=authors
 
 php artisan make:migration create_groups_table       --create=groups
-php artisan make:migration create_groups_users_table --create=groups_users
+php artisan make:migration create_group_user_table   --create=group_user
 php artisan make:migration create_messages_table     --create=messages
 
 # Run the migration
@@ -45,15 +45,27 @@ php artisan make:controller AuthorController
 php artisan make:controller BookController
 php artisan make:controller PublisherController
 
+php artisan make:controller UserController
+php artisan make:controller GroupController
+php artisan make:controller MessageController
+
 # Create API resources
 php artisan make:resource AuthorResource
 php artisan make:resource PublisherResource
 php artisan make:resource BookResource
 
+php artisan make:resource UserResource
+php artisan make:resource GroupResource
+php artisan make:resource MessageResource
+
 # Create API resource collections
 php artisan make:resource AuthorCollection
 php artisan make:resource PublisherCollection
 php artisan make:resource BookCollection
+
+php artisan make:resource UserCollection
+php artisan make:resource GroupCollection
+php artisan make:resource MessageCollection
 ```
 
 ## How to show migration sql?
@@ -96,7 +108,23 @@ http GET    http://localhost:8000/api/books/1
 echo '{"isbn": "888", "title": "abook", "year": 1998, "publisher_id": 1, "authors": [1]}' | http POST   http://localhost:8000/api/books 
 http PUT    http://localhost:8000/api/books/1 
 http DELETE http://localhost:8000/api/books/1 
+
+# For users
+http GET    http://localhost:8000/api/users
+http GET    http://localhost:8000/api/users/1
+echo '{"name": "User1", "email": "User1@gmail.com", "password": "12345678"}' | http POST   http://localhost:8000/api/users
+echo '{"name": "newLee", "email": "User1@gmail.com"}' | http PUT http://localhost:8000/api/users/1
+http DELETE http://localhost:8000/api/users/1 
+
+# For groups
+http GET    http://localhost:8000/api/groups
+http GET    http://localhost:8000/api/groups/1
+echo '{"name": "Group1", "creator": "1"}' | http POST   http://localhost:8000/api/groups
+echo '{"name": "newLee", "email": "User1@gmail.com"}' | http PUT http://localhost:8000/api/groups/1
+http DELETE http://localhost:8000/api/groups/1 
+
 ```
+
 ```
 http://localhost:8000/api/authors
 ```
