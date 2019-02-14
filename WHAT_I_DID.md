@@ -23,7 +23,11 @@ php artisan serve
 php artisan make:migration create_authors_book_table --create=authors_book
 php artisan make:migration create_books_table        --create=books
 php artisan make:migration create_publishers_table   --create=publishers
-php artisan make:migration create_authorss_table     --create=authors
+php artisan make:migration create_authors_table     --create=authors
+
+php artisan make:migration create_groups_table       --create=groups
+php artisan make:migration create_groups_users_table --create=groups_users
+php artisan make:migration create_messages_table     --create=messages
 
 # Run the migration
 php artisan migrate
