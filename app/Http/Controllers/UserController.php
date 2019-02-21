@@ -29,6 +29,12 @@ class UserController extends Controller
 
     public function store(Request $request) 
     {
+        $request->validate([
+            'name'             => 'required|alpha_num|max:150|unique:users,name',
+            'email'            => 'required|email|unique:users,email',
+            'password'         => 'required|min:8',
+            'password_confirm' => 'required|same:password'
+        ]);
         $user = User::create($request->all());
         return response()->json([
             'id'         => $user->id,
@@ -38,6 +44,11 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'email'            => 'required|email',
+            'password'         => 'required|min:8',
+            'password_confirm' => 'required|same:password'
+        ]);
         $user = User::find($id);
         if(!$user) {
             return response()->json([
