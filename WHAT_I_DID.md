@@ -88,40 +88,26 @@ php artisan migrate
 Use HTTPie (download from Internet).
 
 ```sh
-# For authors
-http GET    http://localhost:8000/api/authors
-http GET    http://localhost:8000/api/authors/1
-echo '{"name": "Lee"}' | http POST   http://localhost:8000/api/authors
-echo '{"name": "newLee"}' | http PUT    http://localhost:8000/api/authors/1
-http DELETE http://localhost:8000/api/authors/1 
-
-# For publishers
-http GET    http://localhost:8000/api/publishers
-http GET    http://localhost:8000/api/publishers/1
-echo '{"name": "Leepublisher"}' | http POST   http://localhost:8000/api/publishers
-echo '{"name": "new publisher"}' | http PUT    http://localhost:8000/api/publishers/1
-http DELETE http://localhost:8000/api/publishers/1 
-
-# For books
-http GET    http://localhost:8000/api/books
-http GET    http://localhost:8000/api/books/1
-echo '{"isbn": "888", "title": "abook", "year": 1998, "publisher_id": 1, "authors": [1]}' | http POST   http://localhost:8000/api/books 
-http PUT    http://localhost:8000/api/books/1 
-http DELETE http://localhost:8000/api/books/1 
-
 # For users
 http GET    http://localhost:8000/api/users
 http GET    http://localhost:8000/api/users/1
-echo '{"name": "User1", "email": "User1@gmail.com", "password": "12345678"}' | http POST   http://localhost:8000/api/users
-echo '{"name": "newLee", "email": "User1@gmail.com"}' | http PUT http://localhost:8000/api/users/1
+echo '{"name": "User1", "email": "User1@gmail.com", "password": "12345678", "password_confirm": "12345678"}' | http POST   http://localhost:8000/api/users
+echo '{"name": "User2", "email": "User2@gmail.com", "password": "12345678", "password_confirm": "12345678"}' | http PUT http://localhost:8000/api/users/1
 http DELETE http://localhost:8000/api/users/1 
 
 # For groups
 http GET    http://localhost:8000/api/groups
 http GET    http://localhost:8000/api/groups/1
 echo '{"name": "Group1", "creator": "1"}' | http POST   http://localhost:8000/api/groups
-echo '{"name": "newLee", "email": "User1@gmail.com"}' | http PUT http://localhost:8000/api/groups/1
+echo '{"name": "newLee"}' | http PUT http://localhost:8000/api/groups/1
 http DELETE http://localhost:8000/api/groups/1 
+
+# For auth
+## Register user
+echo '{"name": "bar", "email": "bar@gmail.com", "password": "12345678", "password_confirm": "12345678"}' | http POST http://localhost:8000/api/auth/register
+
+## Login user
+echo '{"email": "bar@gmail.com", "password": "12345678"}' | http POST http://localhost:8000/api/auth/login
 
 ```
 
