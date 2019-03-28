@@ -27,11 +27,14 @@ Route::middleware(['jwt.auth', 'can:manage-users'])->group(function() {
     Route::apiResource('/users', 'UserController');
 });
 
+Route::middleware(['jwt.auth', 'can:create-groups'])->group(function() {
+    Route::post('groups', 'GroupController@store');
+});
+
 Route::resources([
     '/authors'      => 'AuthorController',
     '/publishers'   => 'PublisherController',
     '/books'        => 'BookController',
-    '/groups'       => 'GroupController',
     '/messages'     => 'MessageController'
 ]);
 

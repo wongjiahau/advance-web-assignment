@@ -61,22 +61,29 @@ class InitBouncer extends Command
     }
 
     private $manageUsers;
+    private $createGroups;
     private function defineAbilities()
     {
         $this->manageUsers = Bouncer::ability()->create([
             'name'  => 'manage-users',
             'title' => 'Manage Users'
         ]);
+        $this->createGroups = Bouncer::ability()->create([
+            'name'  => 'create-groups',
+            'title' => 'Create groups'
+        ]);
     }
 
     private function assignAbilities()
     {
         Bouncer::allow($this->admin)->to($this->manageUsers);
+        Bouncer::allow($this->user)->to($this->createGroups);
     }
 
     private function assignRoleToUsers()
     {
-        $user = User::where('name', 'Admin01')->first();
-        Bouncer::assign($this->admin)->to($user);
+        Bouncer::assign($this->admin)->to(User::where('name', 'Admin01')->first());
+        Bouncer::assign($this->user)->to(User::where('name', 'John')->first());
+        
     }
 }
