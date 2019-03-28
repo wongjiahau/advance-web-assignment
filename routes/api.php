@@ -27,8 +27,8 @@ Route::middleware(['jwt.auth', 'can:manage-users'])->group(function() {
     Route::apiResource('/users', 'UserController');
 });
 
-Route::middleware(['jwt.auth', 'can:create-groups'])->group(function() {
-    Route::post('groups', 'GroupController@store');
+Route::middleware(['jwt.auth', 'can:manage-groups'])->group(function() {
+    Route::resource('groups', 'GroupController');
 });
 
 Route::resources([

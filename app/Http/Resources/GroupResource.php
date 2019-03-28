@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
+
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserResource;
 
 class GroupResource extends JsonResource
 {
@@ -14,6 +16,15 @@ class GroupResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'name'  => $this->name,
+            'users' => $this->users->map(function ($x) {
+                return [
+                    'name'     => $x->name,
+                    'email'    => $x->email,
+                    'is_admin' => $x->pivot->group_id == $this->id && $x->pivot->is_admin == 1
+                ];
+            })
+        ];
     }
 }

@@ -69,8 +69,8 @@ class InitBouncer extends Command
             'title' => 'Manage Users'
         ]);
         $this->createGroups = Bouncer::ability()->create([
-            'name'  => 'create-groups',
-            'title' => 'Create groups'
+            'name'  => 'manage-groups',
+            'title' => 'Manage groups'
         ]);
     }
 

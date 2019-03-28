@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Group;
 use App\User;
+use Bouncer;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupCollection;
 
@@ -12,7 +13,8 @@ class GroupController extends Controller
 {
     public function index()
     {
-        return new GroupCollection(GroupResource::collection(Group::all()));
+        $user =auth()->user();
+        return new GroupCollection(GroupResource::collection($user->groups));
     }
 
     public function show($id)
@@ -37,6 +39,7 @@ class GroupController extends Controller
             ]);
             $group = Group::create($request->all());
             $group->users()->attach([$creator->id], ["is_admin" => true]);
+            Bouncer::allow($creator)->toOwn(Group::class);
             return response()->json([
                 'id'         => $group->id,
                 'created_at' => $group->created_at
