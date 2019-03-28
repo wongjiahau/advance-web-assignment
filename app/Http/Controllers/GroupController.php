@@ -39,7 +39,6 @@ class GroupController extends Controller
             ]);
             $group = Group::create($request->all());
             $group->users()->attach([$creator->id], ["is_admin" => true]);
-            Bouncer::allow($creator)->toOwn(Group::class);
             return response()->json([
                 'id'         => $group->id,
                 'created_at' => $group->created_at
@@ -79,5 +78,28 @@ class GroupController extends Controller
             return response()->json(null, 204);
         }
     }
-    //
+    
+    // For adding new user into this group
+    public function add(Request $request) 
+    {
+        $user =auth()->user();
+        $request->validate([
+            'group_id'   => 'required|exists:groups,id',
+            'user_email' => 'required|exists:users,email'
+        ]);
+        $group = $user->groups->find($request->group_id);
+        if($group && $group->pivot->is_admin) {
+            $userToBeAdded = User::where('email', $request->user_email)->first();
+            $group->users()->attach([$userToBeAdded->id], ["is_admin" => false]);
+            return response()->json(null, 204);
+        } else {
+            return response()->json([
+                'error' => "
+                    No group have the id of $request->group_id
+                    or
+                    $user->name does not have authority over this group.
+                "
+            ]);
+        }
+    }
 }
