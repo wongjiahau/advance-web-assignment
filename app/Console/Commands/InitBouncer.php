@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Silber\Bouncer\BouncerFacade as Bouncer;
+use Bouncer;
 use App\User;
 
 class InitBouncer extends Command

@@ -22,11 +22,15 @@ Route::middleware('api')->namespace('Auth')->prefix('auth')->group(function() {
     Route::post('me'      , 'AuthController@me');
 });
 
+
+Route::middleware(['jwt.auth', 'can:manage-users'])->group(function() {
+    Route::apiResource('/users', 'UserController');
+});
+
 Route::resources([
     '/authors'      => 'AuthorController',
     '/publishers'   => 'PublisherController',
     '/books'        => 'BookController',
-    '/users'        => 'UserController',
     '/groups'       => 'GroupController',
     '/messages'     => 'MessageController'
 ]);
