@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5146de96d70fe535500aa008250c4352",
+    "content-hash": "f2e736d574f8674ab736086213fd6155",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -2292,6 +2292,76 @@
                 "uuid"
             ],
             "time": "2018-07-19T23:38:55+00:00"
+        },
+        {
+            "name": "silber/bouncer",
+            "version": "v1.0.0-rc.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JosephSilber/bouncer.git",
+                "reference": "6294ad6f8768460135d4aad60ffb5ca78adfe4c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JosephSilber/bouncer/zipball/6294ad6f8768460135d4aad60ffb5ca78adfe4c5",
+                "reference": "6294ad6f8768460135d4aad60ffb5ca78adfe4c5",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/auth": "5.1.20 - 5.7",
+                "illuminate/cache": "5.1.20 - 5.7",
+                "illuminate/container": "5.1.20 - 5.7",
+                "illuminate/contracts": "5.1.20 - 5.7",
+                "illuminate/database": "5.1.20 - 5.7"
+            },
+            "require-dev": {
+                "illuminate/console": "5.1.20 - 5.7",
+                "illuminate/events": "5.1.20 - 5.7",
+                "larapack/dd": "^1.1",
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "^4.8.35"
+            },
+            "suggest": {
+                "illuminate/console": "Allows running the bouncer:clean artisan command",
+                "illuminate/events": "Required for multi-tenancy support"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Silber\\Bouncer\\BouncerServiceProvider"
+                    ],
+                    "aliases": {
+                        "Bouncer": "Silber\\Bouncer\\BouncerFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Silber\\Bouncer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joseph Silber",
+                    "email": "contact@josephsilber.com"
+                }
+            ],
+            "description": "Eloquent roles and abilities.",
+            "keywords": [
+                "abilities",
+                "acl",
+                "capabilities",
+                "eloquent",
+                "laravel",
+                "permissions",
+                "roles"
+            ],
+            "time": "2018-09-09T14:03:20+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

@@ -66,6 +66,15 @@ php artisan make:resource BookCollection
 php artisan make:resource UserCollection
 php artisan make:resource GroupCollection
 php artisan make:resource MessageCollection
+
+# Install bouncer
+composer require silber/bouncer v1.0.0-rc.3
+php artisan vendor:publish --tag="bouncer.migrations"
+php artisan vendor:publish --tag="bouncer.migrations"
+php artisan migrate
+php artisan make:command InitBouncer
+php artisan InitBouncer
+php artisan create:role
 ```
 
 ## How to show migration sql?

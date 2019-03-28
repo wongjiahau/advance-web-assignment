@@ -1,23 +1,28 @@
 # Features
-A. User can create group   
 
-B. User can update group name
+## For Admin
+A. Can CRUD all users.
 
-C. User can add other user into a group (admin only)
+## For Normal User
+A. Can create group `DONE`
 
-D. User can remove user from a group (admin only)
+B. Can update group name
 
-E. User can can message to a group he/she belongs
+C. Can add other user into a group (group admin only)
 
-F. User can retrieve message from a group he/she belongs (with pagination)
+D. Can remove user from a group (admin only)
 
-G. User can retrieve groups he/she belongs
+E. Can message to a group he/she belongs
 
-H. User can retrieve users from a specific group(only if he/she belongs to the group)
+F. Can retrieve message from a group he/she belongs (with pagination)
 
-I. User can retrieve his/her own profile
+G. Can retrieve groups he/she belongs
 
-J. User can update his/her own profile
+H. Can retrieve users from a specific group(only if he/she belongs to the group)
+
+I. Can retrieve his/her own profile
+
+J. Can update his/her own profile
 
 K. User can exit from a group (if he/she was an admin, a random user from the group will be promoted as admin)
 

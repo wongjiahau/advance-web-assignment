@@ -30,16 +30,23 @@ class GroupController extends Controller
 
     public function store(Request $request) 
     {
-        $request->validate([
-            'name'    => 'required|alpha_num|max:150|unique:groups,name',
-            'creator' => 'required|exists:users,id',
-        ]);
-        $group = Group::create($request->all());
-        $group->users()->attach([$request->creator], ["is_admin" => true]);
-        return response()->json([
-            'id'         => $group->id,
-            'created_at' => $group->created_at
-        ]);
+        $creator = auth()->user();
+        if($creator) {
+            $request->validate([
+                'name'    => 'required|alpha_num|max:150|unique:groups,name',
+            ]);
+            $group = Group::create($request->all());
+            $group->users()->attach([$creator->id], ["is_admin" => true]);
+            return response()->json([
+                'id'         => $group->id,
+                'created_at' => $group->created_at
+            ]);
+        } else {
+            return response()->json([
+                "error" => 404,
+                "message" => "Not found"
+            ]);
+        }
     }
 
     public function update(Request $request, $id)
