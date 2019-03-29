@@ -113,4 +113,22 @@ class GroupController extends Controller
             ]);
         }
     }
+
+    // For user to exit a group
+    public function exit(Request $request)
+    {
+        $user =auth()->user();
+        $request->validate([
+            'group_id'   => 'required|exists:groups,id',
+        ]);
+        $group = Group::find($request->group_id);
+        if($group && $group->users->find($user->id)) {
+            $group->users()->detach([$user->id]);
+            return response()->json(null, 204);
+        } else {
+            return response()->json([
+                'error' => 'Not found'
+            ], 404);
+        }
+    }
 }
