@@ -37,21 +37,3 @@ Route::middleware(['jwt.auth', 'can:manage-messages'])->group(function() {
     Route::post('messages', 'MessageController@store');
     Route::get('messages', 'MessageController@retrieve');
 });
-
-Route::resources([
-    '/authors'      => 'AuthorController',
-    '/publishers'   => 'PublisherController',
-    '/books'        => 'BookController',
-]);
-
-Route::resource('/authors', 'AuthorController', ['except' => [
-    'destroy'
-]]);
-
-Route::resource('/publishers', 'PublisherController', ['except' => [
-    'destroy'
-]]);
-
-Route::resource('/books', 'BookController', ['except' => [
-    'destroy'
-]]);

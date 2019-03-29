@@ -20,11 +20,6 @@ php artisan serve
 
 ```sh
 # Create migrations definition
-php artisan make:migration create_authors_book_table --create=authors_book
-php artisan make:migration create_books_table        --create=books
-php artisan make:migration create_publishers_table   --create=publishers
-php artisan make:migration create_authors_table     --create=authors
-
 php artisan make:migration create_groups_table       --create=groups
 php artisan make:migration create_group_user_table   --create=group_user
 php artisan make:migration create_messages_table     --create=messages
@@ -33,36 +28,20 @@ php artisan make:migration create_messages_table     --create=messages
 php artisan migrate
 
 # Create model
-php artisan make:model Book
-php artisan make:model Publisher
-php artisan make:model Author
-
 php artisan make:model Group
 php artisan make:model Message
 
 # Create controllers
-php artisan make:controller AuthorController
-php artisan make:controller BookController
-php artisan make:controller PublisherController
-
 php artisan make:controller UserController
 php artisan make:controller GroupController
 php artisan make:controller MessageController
 
 # Create API resources
-php artisan make:resource AuthorResource
-php artisan make:resource PublisherResource
-php artisan make:resource BookResource
-
 php artisan make:resource UserResource
 php artisan make:resource GroupResource
 php artisan make:resource MessageResource
 
 # Create API resource collections
-php artisan make:resource AuthorCollection
-php artisan make:resource PublisherCollection
-php artisan make:resource BookCollection
-
 php artisan make:resource UserCollection
 php artisan make:resource GroupCollection
 php artisan make:resource MessageCollection
