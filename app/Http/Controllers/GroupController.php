@@ -19,14 +19,14 @@ class GroupController extends Controller
 
     public function show($id)
     {
-        $group = Group::find($id);
-        if (!$group) {
-            return response()->json([
-                'error' => 404,
-                'message' => 'Not found'
-            ], 404);
-        } else {
+        $user = auth()->user();
+        $group = $user->groups->find($id);
+        if ($group) {
             return new GroupResource($group);
+        } else {
+            return response()->json([
+                'error' => "No group have the id of $id or $user->name does not have authority over this group."
+            ]);
         }
     }
 
@@ -105,11 +105,7 @@ class GroupController extends Controller
             return response()->json(null, 204);
         } else {
             return response()->json([
-                'error' => "
-                    No group have the id of $request->group_id
-                    or
-                    $user->name does not have authority over this group.
-                "
+                'error' => "No group have the id of $request->group_id or $user->name does not have authority over this group."
             ]);
         }
     }
