@@ -17,6 +17,7 @@ class GroupResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id'    => $this->id,
             'name'  => $this->name,
             'users' => $this->users->map(function ($x) {
                 return [

@@ -53,15 +53,26 @@ class GroupController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = auth()->user();
+        $request->validate([
+            'name'    => 'required|max:150',
+        ]);
         $group = Group::find($id);
-        if(!$group) {
+        if($group) {
+            $correspondingUser = $group->users->find($user->id);
+            if($group && $correspondingUser && $correspondingUser->pivot->is_admin) {
+                $group->update($request->all());
+                return response()->json(null, 204);
+            } else {
+                return response()->json([
+                    'message' => 'You are not authorized to update the data of this group.'
+                ], 404);
+            }
+        } else {
             return response()->json([
                 'error'   => 404,
                 'message' => 'Not found'
             ], 404);
-        } else {
-            $group->update($request->all());
-            return response()->json(null, 204);
         }
     }
 
