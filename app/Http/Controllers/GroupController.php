@@ -13,14 +13,14 @@ class GroupController extends Controller
 {
     public function index()
     {
-        $user =auth()->user();
+        $user = auth()->user();
         return new GroupCollection(GroupResource::collection($user->groups));
     }
 
     public function show($id)
     {
         $group = Group::find($id);
-        if(!$group) {
+        if (!$group) {
             return response()->json([
                 'error' => 404,
                 'message' => 'Not found'
@@ -30,12 +30,12 @@ class GroupController extends Controller
         }
     }
 
-    public function store(Request $request) 
+    public function store(Request $request)
     {
         $creator = auth()->user();
-        if($creator) {
+        if ($creator) {
             $request->validate([
-                'name'    => 'required|alpha_num|max:150|unique:groups,name',
+                'name'    => 'required|max:150|unique:groups,name',
             ]);
             $group = Group::create($request->all());
             $group->users()->attach([$creator->id], ["is_admin" => true]);
@@ -58,9 +58,9 @@ class GroupController extends Controller
             'name'    => 'required|max:150',
         ]);
         $group = Group::find($id);
-        if($group) {
+        if ($group) {
             $correspondingUser = $group->users->find($user->id);
-            if($group && $correspondingUser && $correspondingUser->pivot->is_admin) {
+            if ($group && $correspondingUser && $correspondingUser->pivot->is_admin) {
                 $group->update($request->all());
                 return response()->json(null, 204);
             } else {
@@ -79,7 +79,7 @@ class GroupController extends Controller
     public function destroy($id)
     {
         $group = Group::find($id);
-        if(!$group) {
+        if (!$group) {
             return response()->json([
                 'error'   => 404,
                 'message' => 'Not found'
@@ -89,17 +89,17 @@ class GroupController extends Controller
             return response()->json(null, 204);
         }
     }
-    
+
     // For adding new user into this group
-    public function add(Request $request) 
+    public function add(Request $request)
     {
-        $user =auth()->user();
+        $user = auth()->user();
         $request->validate([
             'group_id'   => 'required|exists:groups,id',
             'user_email' => 'required|exists:users,email'
         ]);
         $group = $user->groups->find($request->group_id);
-        if($group && $group->pivot->is_admin) {
+        if ($group && $group->pivot->is_admin) {
             $userToBeAdded = User::where('email', $request->user_email)->first();
             $group->users()->attach([$userToBeAdded->id], ["is_admin" => false]);
             return response()->json(null, 204);
@@ -117,18 +117,43 @@ class GroupController extends Controller
     // For user to exit a group
     public function exit(Request $request)
     {
-        $user =auth()->user();
+        $user = auth()->user();
         $request->validate([
             'group_id'   => 'required|exists:groups,id',
         ]);
         $group = Group::find($request->group_id);
-        if($group && $group->users->find($user->id)) {
+        if ($group && $group->users->find($user->id)) {
             $group->users()->detach([$user->id]);
             return response()->json(null, 204);
         } else {
             return response()->json([
                 'error' => 'Not found'
             ], 404);
+        }
+    }
+
+    // For promoting another user from the same group to become an admin
+    public function promote(Request $request)
+    {
+        $user = auth()->user();
+        $request->validate([
+            'group_id'   => 'required|exists:groups,id',
+            'user_email' => 'required|exists:users,email'
+        ]);
+        $group = $user->groups->find($request->group_id);
+        if ($group && $group->pivot->is_admin) {
+            $userToBePromoted = User::where('email', $request->user_email)->first();
+            $group->users()->detach([$userToBePromoted->id]);
+            $group->users()->attach([$userToBePromoted->id], ["is_admin" => true]);
+            return response()->json(null, 204);
+        } else {
+            return response()->json([
+                'error' => "
+                    No group have the id of $request->group_id
+                    or
+                    $user->name does not have authority over this group.
+                "
+            ]);
         }
     }
 }

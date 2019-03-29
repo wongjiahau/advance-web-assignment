@@ -30,6 +30,7 @@ Route::middleware(['jwt.auth', 'can:manage-users'])->group(function() {
 Route::middleware(['jwt.auth', 'can:manage-groups'])->group(function() {
     Route::resource('groups', 'GroupController');
     Route::post('group_user', 'GroupController@add');
+    Route::put('group_user', 'GroupController@promote');
     Route::delete('group_user', 'GroupController@exit');
 });
 
