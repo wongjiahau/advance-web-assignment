@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Nexmo\Message\Response\Message;
 
 class Group extends Model
 {
@@ -14,7 +13,7 @@ class Group extends Model
 
     public function messages()
     {
-        return $this->belongsToMany(Message::class);
+        return $this->hasMany(Message::class);
     }
 
     public function users()

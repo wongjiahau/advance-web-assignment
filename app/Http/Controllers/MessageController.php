@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\MessageCollection;
 use App\Http\Resources\MessageResource;
 use App\Message;
+use App\Group;
 
 class MessageController extends Controller
 {
@@ -15,16 +16,20 @@ class MessageController extends Controller
         return new MessageCollection(MessageResource::collection(Message::all()));
     }
 
-    public function show($id)
+    public function retrieve(Request $request)
     {
-        $message = Message::find($id);
-        if(!$message) {
-            return response()->json([
-                'error' => 404,
-                'message' => 'Not found'
-            ], 404);
+        $user =auth()->user();
+        $request->validate([
+            'group_id' => 'required|exists:groups,id',
+        ]);
+        $group = Group::find($request->group_id);
+        if($group && $group->users->find($user->id)) {
+            // return $group->messages;
+            return new MessageCollection(MessageResource::collection($group->messages));
         } else {
-            return new MessageResource($group);
+            return response()->json([
+                'error' => 'You cannot view messages of this group.'
+            ], 403);
         }
     }
 

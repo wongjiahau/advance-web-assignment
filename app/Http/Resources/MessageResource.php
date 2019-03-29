@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\User;
 
 class MessageResource extends JsonResource
 {
@@ -14,6 +15,10 @@ class MessageResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'user'    => User::find($this->user_id)->name,
+            'sent_at' => $this->created_at->toArray()["timestamp"],
+            'content' => $this->content
+        ];
     }
 }

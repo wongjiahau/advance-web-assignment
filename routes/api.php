@@ -33,7 +33,8 @@ Route::middleware(['jwt.auth', 'can:manage-groups'])->group(function() {
 });
 
 Route::middleware(['jwt.auth', 'can:manage-messages'])->group(function() {
-    Route::resource('messages', 'MessageController');
+    Route::post('messages', 'MessageController@store');
+    Route::get('messages', 'MessageController@retrieve');
 });
 
 Route::resources([
