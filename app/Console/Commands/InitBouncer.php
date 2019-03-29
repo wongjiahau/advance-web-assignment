@@ -62,6 +62,7 @@ class InitBouncer extends Command
 
     private $manageUsers;
     private $createGroups;
+    private $manageMessages;
     private function defineAbilities()
     {
         $this->manageUsers = Bouncer::ability()->create([
@@ -72,18 +73,24 @@ class InitBouncer extends Command
             'name'  => 'manage-groups',
             'title' => 'Manage groups'
         ]);
+        $this->manageMessages = Bouncer::ability()->create([
+            'name'  => 'manage-messages',
+            'title' => 'Manage messages'
+        ]);
     }
 
     private function assignAbilities()
     {
         Bouncer::allow($this->admin)->to($this->manageUsers);
         Bouncer::allow($this->user)->to($this->createGroups);
+        Bouncer::allow($this->user)->to($this->manageMessages);
     }
 
     private function assignRoleToUsers()
     {
         Bouncer::assign($this->admin)->to(User::where('name', 'Admin01')->first());
         Bouncer::assign($this->user)->to(User::where('name', 'John')->first());
+        Bouncer::assign($this->user)->to(User::where('name', 'Lee')->first());
         
     }
 }

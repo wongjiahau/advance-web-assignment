@@ -32,11 +32,14 @@ Route::middleware(['jwt.auth', 'can:manage-groups'])->group(function() {
     Route::post('group_user', 'GroupController@add');
 });
 
+Route::middleware(['jwt.auth', 'can:manage-messages'])->group(function() {
+    Route::resource('messages', 'MessageController');
+});
+
 Route::resources([
     '/authors'      => 'AuthorController',
     '/publishers'   => 'PublisherController',
     '/books'        => 'BookController',
-    '/messages'     => 'MessageController'
 ]);
 
 Route::resource('/authors', 'AuthorController', ['except' => [

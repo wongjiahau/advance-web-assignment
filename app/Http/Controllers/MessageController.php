@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\MessageCollection;
 use App\Http\Resources\MessageResource;
+use App\Message;
 
 class MessageController extends Controller
 {
@@ -16,8 +17,8 @@ class MessageController extends Controller
 
     public function show($id)
     {
-        $group = Message::find($id);
-        if(!$group) {
+        $message = Message::find($id);
+        if(!$message) {
             return response()->json([
                 'error' => 404,
                 'message' => 'Not found'
@@ -29,16 +30,26 @@ class MessageController extends Controller
 
     public function store(Request $request) 
     {
+        $user =auth()->user();
         $request->validate([
-            'name'    => 'required|alpha_num|max:150|unique:groups,name',
-            'creator' => 'required|exists:users,id',
+            'group_id' => 'required|exists:groups,id',
+            'content'  => 'required|max:200'
         ]);
-        $group = Message::create($request->all());
-        $group->users()->attach([$request->creator], ["is_admin" => true]);
-        return response()->json([
-            'id'         => $group->id,
-            'created_at' => $group->created_at
-        ]);
+        if($user->groups->find($request->group_id)) {
+            $message = Message::create([
+                'group_id' => $request->group_id,
+                'user_id'  => $user->id,
+                'content'  => $request->content
+            ]);
+            return response()->json([
+                'id'         => $message->id,
+                'created_at' => $message->created_at
+            ]);
+        } else {
+            return response()->json([
+                'error' => 'You cannot send message to this group.'
+            ], 403);
+        }
     }
 
     public function update(Request $request, $id)
