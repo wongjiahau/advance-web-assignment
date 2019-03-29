@@ -16,14 +16,18 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::find($id);
-        if(!$user) {
+        $requestingUser = auth()->user();
+        $userToBeViewed = User::find($id);
+        // requestingUser is allowed to view the profile of userToBeViewed if they have belong to a common group
+        if($userToBeViewed && $requestingUser->groups->some(function($g) use($userToBeViewed) {
+            return $g->users->find($userToBeViewed->id);
+        })) {
+            return new UserResource($userToBeViewed);
+        } else {
             return response()->json([
                 'error' => 404,
                 'message' => 'Not found'
             ], 404);
-        } else {
-            return new UserResource($user);
         }
     }
 

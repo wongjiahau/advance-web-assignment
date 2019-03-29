@@ -62,12 +62,17 @@ class InitBouncer extends Command
 
     private $manageUsers;
     private $createGroups;
+    private $viewProfiles;
     private $manageMessages;
     private function defineAbilities()
     {
         $this->manageUsers = Bouncer::ability()->create([
             'name'  => 'manage-users',
             'title' => 'Manage Users'
+        ]);
+        $this->viewProfiles = Bouncer::ability()->create([
+            'name'  => 'view-profiles',
+            'title' => 'View profiles'
         ]);
         $this->createGroups = Bouncer::ability()->create([
             'name'  => 'manage-groups',
@@ -84,6 +89,7 @@ class InitBouncer extends Command
         Bouncer::allow($this->admin)->to($this->manageUsers);
         Bouncer::allow($this->user)->to($this->createGroups);
         Bouncer::allow($this->user)->to($this->manageMessages);
+        Bouncer::allow($this->user)->to($this->viewProfiles);
     }
 
     private function assignRoleToUsers()

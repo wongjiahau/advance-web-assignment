@@ -27,6 +27,11 @@ Route::middleware(['jwt.auth', 'can:manage-users'])->group(function() {
     Route::apiResource('/users', 'UserController');
 });
 
+Route::middleware(['jwt.auth', 'can:view-profiles'])->group(function() {
+    Route::get('/profiles/{id}', 'UserController@show');
+});
+
+
 Route::middleware(['jwt.auth', 'can:manage-groups'])->group(function() {
     Route::resource('groups', 'GroupController');
     Route::post('group_user', 'GroupController@add');
