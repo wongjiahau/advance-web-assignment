@@ -71,7 +71,7 @@ class InitBouncer extends Command
             'title' => 'Manage Users'
         ]);
         $this->viewProfiles = Bouncer::ability()->create([
-            'name'  => 'view-profiles',
+            'name'  => 'manage-profiles',
             'title' => 'View profiles'
         ]);
         $this->createGroups = Bouncer::ability()->create([
