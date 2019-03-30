@@ -9,11 +9,6 @@ use App\Http\Resources\UserResource;
 
 class ProfileController extends Controller
 {
-    public function index()
-    {
-        return new UserCollection(UserResource::collection(User::all()));
-    }
-
     public function show($id)
     {
         $requestingUser = auth()->user();
@@ -50,20 +45,6 @@ class ProfileController extends Controller
                 'error'   => 404,
                 'message' => 'Not found'
             ], 404);
-        }
-    }
-
-    public function destroy($id)
-    {
-        $user = User::find($id);
-        if(!$user) {
-            return response()->json([
-                'error'   => 404,
-                'message' => 'Not found'
-            ], 404);
-        } else {
-            $user->delete();
-            return response()->json(null, 204);
         }
     }
 }

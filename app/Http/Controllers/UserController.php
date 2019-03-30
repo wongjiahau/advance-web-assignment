@@ -16,13 +16,9 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $requestingUser = auth()->user();
-        $userToBeViewed = User::find($id);
-        // requestingUser is allowed to view the profile of userToBeViewed if they have belong to a common group
-        if($userToBeViewed && $requestingUser->groups->some(function($g) use($userToBeViewed) {
-            return $g->users->find($userToBeViewed->id);
-        })) {
-            return new UserResource($userToBeViewed);
+        $user = User::find($id);
+        if($user) {
+            return new UserResource($user);
         } else {
             return response()->json([
                 'error' => 404,
@@ -34,34 +30,41 @@ class UserController extends Controller
     public function store(Request $request) 
     {
         $request->validate([
-            'name'             => 'required|alpha_num|max:150|unique:users,name',
+            'name'             => 'required|max:150|unique:users,name',
             'email'            => 'required|email|unique:users,email',
             'password'         => 'required|min:8',
             'password_confirm' => 'required|same:password'
         ]);
-        $user = User::create($request->all());
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => bcrypt($request->password)
+        ]);
         return response()->json([
             'id'         => $user->id,
             'created_at' => $user->created_at
-        ]);
+        ], 201);
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'email'            => 'required|email',
+            'name'             => 'required',
             'password'         => 'required|min:8',
             'password_confirm' => 'required|same:password'
         ]);
         $user = User::find($id);
-        if(!$user) {
+        if($user) {
+            $user->update([
+                'name'     => $request->name,
+                'password' => bcrypt($request->password)
+            ]);
+            return response()->json(null, 204);
+        } else {
             return response()->json([
                 'error'   => 404,
                 'message' => 'Not found'
             ], 404);
-        } else {
-            $user->update($request->all());
-            return response()->json(null, 204);
         }
     }
 
