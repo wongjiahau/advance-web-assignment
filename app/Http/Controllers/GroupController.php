@@ -101,8 +101,9 @@ class GroupController extends Controller
         $group = $user->groups->find($request->group_id);
         if ($group && $group->pivot->is_admin) {
             $userToBeAdded = User::where('email', $request->user_email)->first();
+            $group->users()->detach([$userToBeAdded->id]); // in case the user had been added before
             $group->users()->attach([$userToBeAdded->id], ["is_admin" => false]);
-            return response()->json(null, 204);
+            return response()->json(null, 201);
         } else {
             return response()->json([
                 'error' => "No group have the id of $request->group_id or $user->name does not have authority over this group."
@@ -141,6 +142,30 @@ class GroupController extends Controller
             $userToBePromoted = User::where('email', $request->user_email)->first();
             $group->users()->detach([$userToBePromoted->id]);
             $group->users()->attach([$userToBePromoted->id], ["is_admin" => true]);
+            return response()->json(null, 204);
+        } else {
+            return response()->json([
+                'error' => "
+                    No group have the id of $request->group_id
+                    or
+                    $user->name does not have authority over this group.
+                "
+            ]);
+        }
+    }
+
+    // For group admin to kick a group member
+    public function kick(Request $request)
+    {
+        $user = auth()->user();
+        $request->validate([
+            'group_id'   => 'required|exists:groups,id',
+            'user_email' => 'required|exists:users,email'
+        ]);
+        $group = $user->groups->find($request->group_id);
+        if ($group && $group->pivot->is_admin) {
+            $userToBeKicked = User::where('email', $request->user_email)->first();
+            $group->users()->detach([$userToBeKicked->id]);
             return response()->json(null, 204);
         } else {
             return response()->json([

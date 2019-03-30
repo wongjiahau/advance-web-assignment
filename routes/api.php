@@ -37,13 +37,14 @@ Route::middleware(['jwt.auth', 'can:manage-profiles'])->group(function() {
 
 
 Route::middleware(['jwt.auth', 'can:manage-groups'])->group(function() {
-    Route::resource('groups', 'GroupController');
-    Route::post('group_user', 'GroupController@add');
-    Route::put('group_user', 'GroupController@promote');
-    Route::delete('group_user', 'GroupController@exit');
+    Route::resource('groups'    , 'GroupController');
+    Route::post    ('group_user', 'GroupController@add');
+    Route::put     ('group_user', 'GroupController@promote');
+    Route::delete  ('group_user', 'GroupController@exit');
+    Route::patch   ('group_user', 'GroupController@kick');
 });
 
 Route::middleware(['jwt.auth', 'can:manage-messages'])->group(function() {
     Route::post('messages', 'MessageController@store');
-    Route::get('messages', 'MessageController@retrieve');
+    Route::get ('messages', 'MessageController@retrieve');
 });
