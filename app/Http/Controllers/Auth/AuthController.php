@@ -20,7 +20,7 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-    public function register(Request $request) 
+    public function register(Request $request)
     {
         $request->validate([
             'name'             => 'required|alpha_num|max:150|unique:users,name',
@@ -36,7 +36,7 @@ class AuthController extends Controller
         return response()->json([
             'id'         => $user->id,
             'created_at' => $user->created_at
-        ]);
+        ], 201);
     }
 
     /**
@@ -60,25 +60,19 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function me()
-    {
-        return response()->json(auth()->user());
-    }
-
-    /**
      * Log the user out (Invalidate the token).
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout()
     {
-        auth()->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
+        $user = auth();
+        if ($user) {
+            auth()->logout();
+            return response()->json(['message' => 'Successfully logged out']);
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 
     /**

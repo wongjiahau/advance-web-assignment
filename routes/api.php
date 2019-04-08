@@ -15,10 +15,10 @@ use Illuminate\Http\Request;
 
 
 Route::middleware('api')->namespace('Auth')->prefix('auth')->group(function() {
-    Route::post('login'   , 'AuthController@login');
-    Route::post('logout'  , 'AuthController@logout');
-    Route::post('refresh' , 'AuthController@refresh');
-    Route::post('me'      , 'AuthController@me');
+    Route::post('login'    , 'AuthController@login');
+    Route::post('logout'   , 'AuthController@logout');
+    Route::post('refresh'  , 'AuthController@refresh');
+    Route::post('register' , 'AuthController@register');
 });
 
 
@@ -45,5 +45,5 @@ Route::middleware(['jwt.auth', 'can:manage-groups'])->group(function() {
 
 Route::middleware(['jwt.auth', 'can:manage-messages'])->group(function() {
     Route::post('messages', 'MessageController@store');
-    Route::get ('messages', 'MessageController@retrieve');
+    Route::get ('messages/{id}', 'MessageController@retrieve');
 });

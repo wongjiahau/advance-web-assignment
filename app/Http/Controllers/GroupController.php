@@ -26,7 +26,7 @@ class GroupController extends Controller
         } else {
             return response()->json([
                 'error' => "No group have the id of $id or $user->name does not have authority over this group."
-            ]);
+            ], 404);
         }
     }
 
@@ -42,7 +42,7 @@ class GroupController extends Controller
             return response()->json([
                 'id'         => $group->id,
                 'created_at' => $group->created_at
-            ]);
+            ], 201);
         } else {
             return response()->json([
                 "error" => 404,

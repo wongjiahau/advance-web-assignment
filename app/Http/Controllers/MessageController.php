@@ -16,15 +16,11 @@ class MessageController extends Controller
         return new MessageCollection(MessageResource::collection(Message::all()));
     }
 
-    public function retrieve(Request $request)
+    public function retrieve(Request $request, $groupId)
     {
         $user =auth()->user();
-        $request->validate([
-            'group_id' => 'required|exists:groups,id',
-        ]);
-        $group = Group::find($request->group_id);
+        $group = Group::find($groupId);
         if($group && $group->users->find($user->id)) {
-            // return $group->messages;
             return new MessageCollection(MessageResource::collection($group->messages));
         } else {
             return response()->json([
@@ -49,7 +45,7 @@ class MessageController extends Controller
             return response()->json([
                 'id'         => $message->id,
                 'created_at' => $message->created_at
-            ]);
+            ], 201);
         } else {
             return response()->json([
                 'error' => 'You cannot send message to this group.'

@@ -18,7 +18,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if($user) {
-            return new UserResource($user);
+            return $user;
         } else {
             return response()->json([
                 'error' => 404,
