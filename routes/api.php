@@ -44,6 +44,8 @@ Route::middleware(['jwt.auth', 'can:manage-groups'])->group(function() {
 });
 
 Route::middleware(['jwt.auth', 'can:manage-messages'])->group(function() {
-    Route::post('messages', 'MessageController@store');
-    Route::get ('messages/{id}', 'MessageController@retrieve');
+    Route::post  ('messages'     , 'MessageController@store');
+    Route::get   ('messages/{id}', 'MessageController@retrieve');
+    Route::put   ('messages/{id}', 'MessageController@update');
+    Route::delete('messages/{id}', 'MessageController@destroy');
 });

@@ -16,7 +16,8 @@ class MessageResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'user'    => User::find($this->user_id)->name,
+            'author'  => User::find($this->user_id)->name,
+            'id'      => $this->id,
             'sent_at' => $this->created_at->toArray()["timestamp"],
             'content' => $this->content
         ];

@@ -55,29 +55,47 @@ class MessageController extends Controller
 
     public function update(Request $request, $id)
     {
-        $group = Message::find($id);
-        if(!$group) {
+        $user =auth()->user();
+        $message = $user->messages()->find($id);
+        if($message) {
+            // check if the user is still in the group
+            if($message->group->users()->find($user->id)) {
+                $message->update($request->all());
+                return response()->json(null, 204);
+            } else {
+                return response()->json([
+                    'message' => 'You cannot update this message anymore.'
+                ], 403);
+            }
+            
+        } else {
             return response()->json([
                 'error'   => 404,
                 'message' => 'Not found'
             ], 404);
-        } else {
-            $group->update($request->all());
-            return response()->json(null, 204);
         }
     }
 
     public function destroy($id)
     {
-        $group = Message::find($id);
-        if(!$group) {
+        $user =auth()->user();
+        $message = $user->messages()->find($id);
+        if($message) {
+            // check if the user is still in the group
+            if($message->group->users()->find($user->id)) {
+                $message->delete();
+                return response()->json(null, 204);
+            } else {
+                return response()->json([
+                    'message' => 'You cannot delete this message anymore.'
+                ], 403);
+            }
+            
+        } else {
             return response()->json([
                 'error'   => 404,
                 'message' => 'Not found'
             ], 404);
-        } else {
-            $group->delete();
-            return response()->json(null, 204);
         }
     }
 
