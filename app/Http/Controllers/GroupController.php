@@ -60,13 +60,14 @@ class GroupController extends Controller
         $group = Group::find($id);
         if ($group) {
             $correspondingUser = $group->users->find($user->id);
+            // check if the user is admin of this group
             if ($group && $correspondingUser && $correspondingUser->pivot->is_admin) {
                 $group->update($request->all());
                 return response()->json(null, 204);
             } else {
                 return response()->json([
                     'message' => 'You are not authorized to update the data of this group.'
-                ], 404);
+                ], 403);
             }
         } else {
             return response()->json([
@@ -102,8 +103,8 @@ class GroupController extends Controller
         if ($group && $group->pivot->is_admin) {
             $userToBeAdded = User::where('email', $request->user_email)->first();
             $group->users()->detach([$userToBeAdded->id]); // in case the user had been added before
-            $group->users()->attach([$userToBeAdded->id], ["is_admin" => false]);
-            return response()->json(null, 201);
+            $group->users()->attach([$userToBeAdded->id], ["is_admin" => false]); // by default, new group member is not admin
+            return response()->json(null, 204);
         } else {
             return response()->json([
                 'error' => "No group have the id of $request->group_id or $user->name does not have authority over this group."
@@ -112,13 +113,11 @@ class GroupController extends Controller
     }
 
     // For user to exit a group
-    public function exit(Request $request)
+    public function exit($id)
     {
         $user = auth()->user();
-        $request->validate([
-            'group_id'   => 'required|exists:groups,id',
-        ]);
-        $group = Group::find($request->group_id);
+        $group = Group::find($id);
+        // Make sure the requesting user is already in the target group
         if ($group && $group->users->find($user->id)) {
             $group->users()->detach([$user->id]);
             return response()->json(null, 204);
