@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Bouncer;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserCollection;
@@ -40,6 +41,7 @@ class UserController extends Controller
             'email'    => $request->email,
             'password' => bcrypt($request->password)
         ]);
+        Bouncer::assign('user')->to($user);
         return response()->json([
             'id'         => $user->id,
             'created_at' => $user->created_at
