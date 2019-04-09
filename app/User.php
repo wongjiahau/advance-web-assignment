@@ -33,7 +33,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function groups()
     {
-        return $this->belongsToMany(Group::class)->withPivot(['is_admin']);
+        return $this->belongsToMany(Group::class)->withPivot(['rank']);
     }
 
     public function messages()

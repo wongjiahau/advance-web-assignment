@@ -21,9 +21,9 @@ class GroupResource extends JsonResource
             'name'  => $this->name,
             'users' => $this->users->map(function ($x) {
                 return [
-                    'name'     => $x->name,
-                    'email'    => $x->email,
-                    'is_admin' => $x->pivot->group_id == $this->id && $x->pivot->is_admin == 1
+                    'name' => $x->name,
+                    'email'=> $x->email,
+                    'rank' => $x->pivot->rank
                 ];
             })
         ];

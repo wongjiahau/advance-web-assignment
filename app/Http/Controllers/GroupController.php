@@ -38,7 +38,7 @@ class GroupController extends Controller
                 'name'    => 'required|max:150|unique:groups,name',
             ]);
             $group = Group::create($request->all());
-            $group->users()->attach([$creator->id], ["is_admin" => true]);
+            $group->users()->attach([$creator->id], ["rank" => 1]);
             return response()->json([
                 'id'         => $group->id,
                 'created_at' => $group->created_at
@@ -61,7 +61,7 @@ class GroupController extends Controller
         if ($group) {
             $correspondingUser = $group->users->find($user->id);
             // check if the user is admin of this group
-            if ($group && $correspondingUser && $correspondingUser->pivot->is_admin) {
+            if ($group && $correspondingUser && $correspondingUser->pivot->rank) {
                 $group->update($request->all());
                 return response()->json(null, 204);
             } else {
@@ -100,10 +100,10 @@ class GroupController extends Controller
             'user_email' => 'required|exists:users,email'
         ]);
         $group = $user->groups->find($request->group_id);
-        if ($group && $group->pivot->is_admin) {
+        if ($group && $group->pivot->rank) {
             $userToBeAdded = User::where('email', $request->user_email)->first();
             $group->users()->detach([$userToBeAdded->id]); // in case the user had been added before
-            $group->users()->attach([$userToBeAdded->id], ["is_admin" => false]); // by default, new group member is not admin
+            $group->users()->attach([$userToBeAdded->id], ["rank" => null]); // by default, new group member is not admin
             return response()->json(null, 204);
         } else {
             return response()->json([
@@ -137,10 +137,12 @@ class GroupController extends Controller
             'user_email' => 'required|exists:users,email'
         ]);
         $group = $user->groups->find($request->group_id);
-        if ($group && $group->pivot->is_admin) {
+        if ($group && $group->pivot->rank) {
             $userToBePromoted = User::where('email', $request->user_email)->first();
             $group->users()->detach([$userToBePromoted->id]);
-            $group->users()->attach([$userToBePromoted->id], ["is_admin" => true]);
+
+            // The promoted user will have one rank lower than the promoter
+            $group->users()->attach([$userToBePromoted->id], ["rank" => $group->pivot->rank + 1]);
             return response()->json(null, 204);
         } else {
             return response()->json([
@@ -162,10 +164,20 @@ class GroupController extends Controller
             'user_email' => 'required|exists:users,email'
         ]);
         $group = $user->groups->find($request->group_id);
-        if ($group && $group->pivot->is_admin) {
+        if ($group && $group->pivot->rank) {
+            $userRank = $group->pivot->rank;
             $userToBeKicked = User::where('email', $request->user_email)->first();
-            $group->users()->detach([$userToBeKicked->id]);
-            return response()->json(null, 204);
+            
+            // user can only kick userToBeKicked if he/she has a higher rank than the latter
+            if($userRank < $userToBeKicked->groups->find($request->group_id)->pivot->rank) {
+                $group->users()->detach([$userToBeKicked->id]);
+                return response()->json(null, 204);
+            } else {
+                return response()->json([
+                    'message' => "You cannot kick a member whose rank is higher than you."
+                ], 403);
+            }
+            
         } else {
             return response()->json([
                 'error' => "
